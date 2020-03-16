@@ -6,7 +6,7 @@ const client = new Discord.Client();
 const prefix = '!'
 
 client.once('ready', () => {
-    console.log('Sub bot lives!')
+    console.log('I live!')
 })
 
 client.on('message', message => {
@@ -16,19 +16,24 @@ client.on('message', message => {
         let member = message.author
         let link = message.content.match(/\bhttps?:\/\/\S+/gi)
         if(link){
-            googleSheet.addSubmission(
+            let status = googleSheet.addSubmission(
                 member.username, 
                 link[0], 
                 secrets['current-sheet']
             )
 
-            message.channel.send(':wave: <@' + member.id + '> ' + secrets['sub-message'])
+            if(status){
+                message.channel.send(':wave: <@' + member.id + '> ' + secrets['sub-message'])
+            } else {
+                message.channel.send('<@' + member.id + '> Submission, you should probably contact the mods.')
+            }
+
         } else {
             message.channel.send('<@' + member.id + '> Invalid submission')
         }
     }
 
-    // !sheet
+    // !setsheet
     if(message.content.startsWith(`${prefix}setsheet`)) {
         let sheetNumber = message.content.match(/[0-9]+/g)
         secrets['current-sheet'] = sheetNumber[0]
@@ -43,10 +48,8 @@ client.on('message', message => {
 
     // !test
     if(message.content.startsWith(`${prefix}test`)) {
-        console.log(message.author)
-        console.log(message.author.username)
-        console.log(message.author.toString())
-        console.log(message.author.username.toString())
+        role = message.author.tag
+        message.channel.send(role)
     }
 })
 
