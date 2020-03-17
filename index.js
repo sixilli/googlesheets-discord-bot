@@ -1,6 +1,7 @@
 const Discord = require('discord.js')
 const secrets = require('./.env.js')
 const googleSheet = require('./google.js')
+const util = require('./utils')
 
 const client = new Discord.Client();
 const prefix = '!'
@@ -16,7 +17,7 @@ client.on('message', message => {
         let member = message.author
         let link = message.content.match(/\bhttps?:\/\/\S+/gi)
         if(link){
-            let status = googleSheet.addSubmission(
+            let status = googleSheet.submission(
                 member.username, 
                 link[0], 
                 secrets['current-sheet']
@@ -35,6 +36,9 @@ client.on('message', message => {
 
     // !setsheet
     if(message.content.startsWith(`${prefix}setsheet`)) {
+        let role = message.member.roles.highest.name
+        let check = util.checkRoles(role)
+
         let sheetNumber = message.content.match(/[0-9]+/g)
         secrets['current-sheet'] = sheetNumber[0]
         console.log(`Sheet updated: ${sheetNumber} by ${message.author.username}`)
@@ -43,13 +47,19 @@ client.on('message', message => {
 
     // !currentsheet
     if(message.content.startsWith(`${prefix}currentsheet`)) {
+        let role = message.member.roles.highest.name
+        let check = util.checkRoles(role)
         message.channel.send(`Current sheet is set to ${secrets['current-sheet']}`)
     }
 
     // !test
     if(message.content.startsWith(`${prefix}test`)) {
-        role = message.author.tag
-        message.channel.send(role)
+        console.log(`${role} ${check}`)
+        if(check) {
+            message.channel.send(role)
+        } else {
+            message.channel.send('You do not have high enough privaleges!')
+        }
     }
 })
 
