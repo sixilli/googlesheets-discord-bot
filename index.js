@@ -11,11 +11,13 @@ client.once('ready', () => {
 })
 
 client.on('message', message => {
-
     // !submit
+    // All users
     if(message.content.startsWith(`${prefix}submit`)) {
         let member = message.author
         let link = message.content.match(/\bhttps?:\/\/\S+/gi)
+
+        // Check for link
         if(link){
             let status = googleSheet.submission(
                 member.username, 
@@ -23,6 +25,7 @@ client.on('message', message => {
                 secrets['current-sheet']
             )
 
+            // Error handeling for submissions
             if(status){
                 message.channel.send(':wave: <@' + member.id + '> ' + secrets['sub-message'])
             } else {
@@ -35,21 +38,27 @@ client.on('message', message => {
     }
 
     // !setsheet
+    // Mods only
     if(message.content.startsWith(`${prefix}setsheet`)) {
         let role = message.member.roles.highest.name
         let check = util.checkRoles(role)
 
-        let sheetNumber = message.content.match(/[0-9]+/g)
-        secrets['current-sheet'] = sheetNumber[0]
-        console.log(`Sheet updated: ${sheetNumber} by ${message.author.username}`)
-        message.channel.send(`Working sheet set to ${sheetNumber[0]}`)
+        if(check){
+            let sheetNumber = message.content.match(/[0-9]+/g)
+            secrets['current-sheet'] = sheetNumber[0]
+            console.log(`Sheet updated: ${sheetNumber} by ${message.author.username}`)
+            message.channel.send(`Working sheet set to ${sheetNumber[0]}`)
+        }
     }
 
     // !currentsheet
+    // Mods only
     if(message.content.startsWith(`${prefix}currentsheet`)) {
         let role = message.member.roles.highest.name
         let check = util.checkRoles(role)
-        message.channel.send(`Current sheet is set to ${secrets['current-sheet']}`)
+        if(check){
+            message.channel.send(`Current sheet is set to ${secrets['current-sheet']}`)
+        }
     }
 
     // !test
