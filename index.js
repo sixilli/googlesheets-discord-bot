@@ -20,8 +20,8 @@ client.on('message', message => {
         // Check for link
         if(link){
             let status = googleSheet.submission(
-                member.username, 
-                link[0], 
+                member.username,
+                link[0],
                 secrets['current-sheet']
             )
 

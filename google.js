@@ -27,14 +27,16 @@ async function submission(name, link, sheetNum) {
 async function addOrUpdateRow(name, link, sheet) {
     try {
         const rows =  await sheet.getRows()
+        await sheet.loadCells()
 
-        let nameCol = rows.name
+        //let nameCol = rows.name
 
         // Update if we find the name and return early
-        for (i = 0; i < nameCol.length; i++) {
-            if(nameCol[i].includes(name)) {
-                const rowName = getCell(i, 0)
-                const rowLink = getCell(i, 3)
+        for (i = 0; i < rows.length; i++) {
+            if(rows[i].Name.includes(name)) {
+                // Rows excludes columns, so an offset is needed
+                const rowName = sheet.getCell(i+1, 0)
+                const rowLink = sheet.getCell(i+1, 3)
 
                 rowName.value = name
                 rowLink.value = link
@@ -43,7 +45,7 @@ async function addOrUpdateRow(name, link, sheet) {
                 console.log('Updated user submission')
 
                 return true
-            } 
+            }
         }
 
         await sheet.addRow({
