@@ -1,5 +1,7 @@
+// General helper functions
+
 function checkRoles(highest) {
-    // Function to check if user is a high enough tier.
+    // Function to check if user has sufficient privileges.
     let roles = ['Moderator', 'Creator'];
 
     let check = roles.some(x => highest.includes(x))

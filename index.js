@@ -15,9 +15,11 @@ client.on('message', message => {
     // All users
     if(message.content.startsWith(`${prefix}submit`)) {
         let member = message.author
+
+        // Extract link
         let link = message.content.match(/\bhttps?:\/\/\S+/gi)
 
-        // Check for link
+        // Process if link
         if(link){
             let status = googleSheet.submission(
                 member.username,
