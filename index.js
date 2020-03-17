@@ -61,11 +61,11 @@ client.on('message', message => {
         }
     }
 
-    // !test
-    if(message.content.startsWith(`${prefix}test`)) {
-        console.log(`${role} ${check}`)
+    // !submission-bot
+    if(message.content.startsWith(`${prefix}submission-bot`)) {
+        let check = util.checkRoles(role)
         if(check) {
-            message.channel.send(role)
+            message.channel.send('Available commands: !submit, !currentsheet')
         } else {
             message.channel.send('You do not have high enough privaleges!')
         }
